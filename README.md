@@ -2,7 +2,7 @@
 
 The parts the openhealthcare report modules for [OpenEMR](https://www.open-emr.org) share: UDS Report, Title X Report and CCBHC Report today, and the program reports after them (Ryan White's RSR, public dashboards). Each module has its own copy of these parts, and the copies already differ in small ways: how a year is chosen, how an age is taken, how a CSV cell is guarded. This package will hold one of each, configured per program.
 
-It's a plain Composer library, not an OpenEMR module, and it needs no OpenEMR class: a module hands it data and adapters. **Not released.** While it's 0.x the report modules that use it release together, since a 0.x minor may change an interface (see the design, `docs/products/reporting-engine-2026-10.md` in the openhealthcare workspace).
+It's a plain Composer library, not an OpenEMR module, and it needs no OpenEMR class: a module hands it data and adapters. **Not released.** While it's 0.x the report modules that use it release together, since a 0.x minor may change an interface.
 
 ## What's in it
 
