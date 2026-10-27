@@ -2,8 +2,9 @@
 
 /**
  * The package against the golden files: on every synthetic input, configured as each module will configure it,
- * it gives what that module's own code gave. Two answers change on purpose when CCBHC moves, both only on data
- * no clinic should have; each is named by a rule here, and the test fails if any other answer differs.
+ * it gives what that module's own code gave. No answer changes when a module moves: the two the design named,
+ * both CCBHC's, went out in CCBHC 0.1.6 (a birth after the day is age 0; every text cell of the client list is
+ * guarded). An answer meant to change is named by a rule in changes(), and the test fails if any other differs.
  *
  * @package   OpenHealthcare\Reporting
  * @link      https://github.com/anun333/openhealthcare-reporting
@@ -53,6 +54,7 @@ final class GoldenTest extends TestCase
                 'reportYear.resolve' => fn(string $q, string $now): int => Programs::ccbhcYear()->resolve((int)$q, new DateTimeImmutable($now)),
                 'age.on' => fn(?string $dob, string $day): ?int => Programs::ccbhcAge()->on($dob, new DateTimeImmutable($day)),
                 'csv.safe' => fn(string $v): string => (string)Csv::cell($v),
+                'csv.spreadsheet' => fn(array $lines): string => Csv::lines($lines, CsvMode::Spreadsheet),
             ],
         ];
     }
@@ -64,24 +66,10 @@ final class GoldenTest extends TestCase
      */
     private static function changes(): array
     {
-        return [
-            [
-                'ccbhc', 'age.on',
-                // Client::ageOn() takes diff()->y without its sign, so a birth more than a year after the day reads
-                // as that many years old. The package gives 0, as for a birth less than a year after.
-                fn(?string $dob, string $day): bool => $dob !== null && $dob > $day,
-                fn(?string $dob, string $day): int => 0,
-                'a date of birth more than a year after the day gave a positive age',
-            ],
-            [
-                'ccbhc', 'csv.safe',
-                // The client list put an apostrophe before a chart number like -12; spreadsheet mode leaves a
-                // negative number alone, as UDS's downloads do.
-                fn(string $v): bool => preg_match('/^-\d+(?:\.\d+)?$/D', $v) === 1,
-                fn(string $v): string => $v,
-                'a negative number in the chart number or name column got an apostrophe',
-            ],
-        ];
+        // None now. CCBHC 0.1.6 (2026-10-26) took the two the design named: Client::ageOn() gives 0 for a birth
+        // after the day, and the client list guards every text cell with UDS's rule, so a chart number like -12
+        // keeps no apostrophe.
+        return [];
     }
 
     /** @return iterable<string, array{string, string, list<mixed>, mixed}> */
@@ -114,6 +102,10 @@ final class GoldenTest extends TestCase
     /** Each change named above happens on at least one golden input, so the design's account of them stays true. */
     public function testEachNamedChangeIsExercised(): void
     {
+        if (self::changes() === []) {
+            $this->expectNotToPerformAssertions();
+            return;
+        }
         foreach (self::changes() as [$module, $kind, $applies, $instead, $what]) {
             $differs = 0;
             foreach (Golden::read($module)['cases'][$kind] as $case) {

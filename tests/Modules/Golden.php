@@ -128,6 +128,7 @@ final class Golden
         foreach (['Smith, Ann', 'O\'Neil, Pat', '-Smith', '=HYPERLINK("x")', '+1', '@SUM(1)', '-12', '-12.5', '12', '', ' =x', 'A-1007'] as $v) {
             $cases['csv.safe'][] = ['in' => [$v], 'out' => Answers::ccbhcSafe($v)];
         }
+        $cases['csv.spreadsheet'][] = ['in' => [self::csvLines()], 'out' => Answers::ccbhcCsv(self::csvLines())];
         return ['source' => ModuleSource::identity('ccbhc'), 'cases' => $cases];
     }
 

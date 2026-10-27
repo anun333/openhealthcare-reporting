@@ -24,6 +24,7 @@ use OpenEMR\Modules\UdsReport\Report\ReportYear;
 use OpenEMR\Modules\UdsReport\Report\SmallCells as UdsSmallCells;
 use OpenEMR\Modules\UdsReport\ReferenceData\PovertyGuidelines as UdsGuidelines;
 use OpenHealthcare\CcbhcReport\Domain\Client;
+use OpenHealthcare\CcbhcReport\Report\CsvRow as CcbhcCsvRow;
 use OpenHealthcare\TitleXReport\Reference\PovertyGuidelines as TitleXGuidelines;
 use OpenHealthcare\TitleXReport\Report\CsvFile;
 use OpenHealthcare\TitleXReport\Report\PriorYear as TitleXPriorYear;
@@ -195,7 +196,7 @@ final class Answers
         };
     }
 
-    // CCBHC Report (src/Domain/Client.php, public/index.php, public/download.php)
+    // CCBHC Report (src/Domain/Client.php, public/index.php, src/Report/CsvRow.php)
 
     public static function ccbhcYear(string $query, string $now): int
     {
@@ -214,11 +215,22 @@ final class Answers
         return $client->ageOn(new DateTimeImmutable($day));
     }
 
-    /** The client list's guard on the chart number and name columns. */
+    /** The client list's guard on a cell (every column, from 0.1.6). */
     public static function ccbhcSafe(string $value): string
     {
-        ModuleSource::line('ccbhc', 'public/download.php', '$safe = fn(string $v): string => preg_match(\'/^[=+\-@]/\', $v) === 1 ? "\'" . $v : $v;');
-        $safe = fn(string $v): string => preg_match('/^[=+\-@]/', $v) === 1 ? "'" . $v : $v;
-        return $safe($value);
+        ModuleSource::load('ccbhc');
+        return (string)CcbhcCsvRow::cell($value);
+    }
+
+    /** @param list<list<int|string>> $lines */
+    public static function ccbhcCsv(array $lines): string
+    {
+        ModuleSource::load('ccbhc');
+        $out = fopen('php://temp', 'w+');
+        foreach ($lines as $line) {
+            CcbhcCsvRow::write($out, $line);
+        }
+        rewind($out);
+        return (string)stream_get_contents($out);
     }
 }

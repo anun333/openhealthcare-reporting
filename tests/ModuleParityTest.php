@@ -109,9 +109,8 @@ final class ModuleParityTest extends TestCase
             self::assertSame(Answers::udsAge($dob, $year), Programs::udsAge()->inYear($dob, $year), "UDS $dob in $year");
             self::assertSame(Answers::titleXAge($dob, $year), Programs::titleXAge()->inYear($dob, $year) ?? 0, "Title X $dob in $year");
             $on = $day(2020, 2027);
-            $ccbhc = Answers::ccbhcAge($dob, $on);
-            // The one named change (GoldenTest::changes()): a birth after the day is 0 in the package.
-            self::assertSame($dob > $on ? 0 : $ccbhc, Programs::ccbhcAge()->on($dob, new DateTimeImmutable($on)), "CCBHC $dob on $on");
+            // From CCBHC 0.1.6 a birth after the day is 0 in the module too, so every answer agrees.
+            self::assertSame(Answers::ccbhcAge($dob, $on), Programs::ccbhcAge()->on($dob, new DateTimeImmutable($on)), "CCBHC $dob on $on");
         }
     }
 

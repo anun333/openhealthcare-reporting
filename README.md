@@ -20,7 +20,7 @@ Each program's settings, written with these parts, are in `tests/Programs.php`: 
 
 ## How it's held to the modules
 
-- **Golden files** (`tests/golden/*.json`): each module's own code, run on fixed synthetic inputs (1,651 cases, no patient data), with the module's version and commit. `tools/golden.php` writes them from the modules' checkouts, read and never changed. `GoldenTest` checks the package gives the same answer on every case. Two answers change on purpose when CCBHC moves, both on data no clinic should have; `GoldenTest::changes()` names them by rule, and any other difference fails.
+- **Golden files** (`tests/golden/*.json`): each module's own code, run on fixed synthetic inputs (1,652 cases, no patient data), with the module's version and commit. `tools/golden.php` writes them from the modules' checkouts, read and never changed. `GoldenTest` checks the package gives the same answer on every case, with no exceptions: the two answers the design said would change, both CCBHC's, went out in CCBHC 0.1.6. An answer meant to change in a later move is named by rule in `GoldenTest::changes()`, and any other difference fails.
 - **Side by side** (`ModuleParityTest`): where the modules are checked out beside this package, it rebuilds the golden files from them and compares, runs UDS's own suppression tests against both implementations, and compares 20,000 random breakdowns, 5,000 random dates of birth and 12,000 random incomes. It skips where the modules aren't checked out, CI included.
 
 ```sh
