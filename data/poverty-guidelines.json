@@ -1,0 +1,47 @@
+{
+  "about": "HHS poverty guidelines, shared by the report modules (UDS Table 4 income lines, the FPAR Table 4 preview). A family's guideline is firstPerson, plus eachAdditional for every person after the first. region is contiguous (the 48 contiguous states and DC), alaska or hawaii. Each year's figures are copied from the HHS/ASPE publication and cited in source. A row whose figures are null is still to be filled in: a report shows that year and region as not loaded, and never estimates. The figures match the UDS Report's and Title X Report's copies of this file as of UDS 0.17.5 and Title X 0.2.2; tests/ModuleParityTest.php checks that wherever those modules are checked out beside this package.",
+  "guidelines": [
+    {
+      "year": 2026,
+      "region": "contiguous",
+      "firstPerson": 15960,
+      "eachAdditional": 5680,
+      "source": "HHS poverty guidelines, Federal Register, January 15, 2026"
+    },
+    {
+      "year": 2026,
+      "region": "alaska",
+      "firstPerson": 19950,
+      "eachAdditional": 7100,
+      "source": "HHS poverty guidelines, Federal Register, January 15, 2026"
+    },
+    {
+      "year": 2026,
+      "region": "hawaii",
+      "firstPerson": 18360,
+      "eachAdditional": 6530,
+      "source": "HHS poverty guidelines, Federal Register, January 15, 2026"
+    },
+    {
+      "year": 2025,
+      "region": "contiguous",
+      "firstPerson": 15650,
+      "eachAdditional": 5500,
+      "source": "HHS/ASPE 2025 poverty guidelines"
+    },
+    {
+      "year": 2025,
+      "region": "alaska",
+      "firstPerson": null,
+      "eachAdditional": null,
+      "source": null
+    },
+    {
+      "year": 2025,
+      "region": "hawaii",
+      "firstPerson": null,
+      "eachAdditional": null,
+      "source": null
+    }
+  ]
+}
